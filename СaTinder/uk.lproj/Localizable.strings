@@ -1,0 +1,37 @@
+/* 
+  Localizable.strings
+  СaTinder
+
+  Created by Sasha Myshkina on 19.05.2020.
+  Copyright © 2020 Sasha Myshkina. All rights reserved.
+*/
+
+"Name" = "Ім'я";
+"I accept" = "Я погоджуюся";
+"Cat's policy" = "із котячою політикою";
+"Child-friendly" = "Френдлі до дітей";
+"Stranger-friendly" = "Люб'язний до незнайомців";
+"Rare" = "Рідкісний кіт";
+"Short legs" = "Із короткими ногами";
+"Energetic" = "Енергійний";
+"Loves to stay home" = "Домосід";
+"Dog-friendly" = "Товаришує із песиками";
+"Intellegent" = "Розумаха";
+"Hairless" = "Скінхед";
+"Hypoallergenic" = "Не викликає алергії";
+"Suppressed_tail" = "Має маленький хвіст";
+"Choose as many tags as you want to find your best matchie. Apply filters and check" = "Оберіть характеристики, які важливі при виборі котика. Застосуйте фільтрацію для пошуку ідеального друга";
+"Apply" = "Застосувати фільтр";
+"Back" = "Назад";
+"Next" = "Далі";
+"Save" = "Зберегти";
+"Cancel" = "Скасувати";
+"Log out" = "Вийти";
+"Enter your name" = "Введіть ім'я";
+"Age" = "Вік";
+"How old are you?" = "Скільки вам років?";
+"What do you love about cats?" = "Чому любите котів?";
+"Up to 30 symbols to explain why you are so into feline" = "Поясніть будь ласка в двох словах";
+"Add your profile photo" = "Додайте ваше фото";
+"Clarify your search" = "Ідеальний кандидат";
+"No cats" = "Нема котiв";

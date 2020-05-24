@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  СaTinder
+
+  Created by Sasha Myshkina on 19.05.2020.
+  Copyright © 2020 Sasha Myshkina. All rights reserved.
+*/
+
+
+"Name" = "Name";
+"I accept" = "I accept";
+"Cat's policy" = "Cat's policy";
+"Child-friendly" = "Child-friendly";
+"Stranger-friendly" = "Stranger-friendly";
+"Rare" = "Rare";
+"Short legs" = "Short legs";
+"Energetic" = "Energetic";
+"Loves to stay home" = "Loves to stay home";
+"Dog-friendly" = "Dog-friendly";
+"Intellegent" = "Intellegent";
+"Hairless" = "Hairless";
+"Hypoallergenic" = "Hypoallergenic";
+"Suppressed_tail" = "Suppressed_tail";
+"Choose as many tags as you want to find your best matchie. Apply filters and check" = "Choose as many tags as you want to find your best matchie. Apply filters and check";
+"Apply" = "Apply";
+"Back" = "Back";
+"Next" = "Next";
+"Save" = "Save";
+"Cancel" = "Cancel";
+"Log out" = "Log out";
+"Enter your name" = "Enter your name";
+"Age" = "Age";
+"How old are you?" = "How old are you?";
+"What do you love about cats?" = "What do you love about cats?";
+"Up to 30 symbols to explain why you are so into feline" = "Up to 30 symbols to explain why you are so into feline";
+"Add your profile photo" = "Add your profile photo";
+"Clarify your search" = "Clarify your search";
+"No cats" = "No cats";
+
+
+
+
