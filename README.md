@@ -56,12 +56,18 @@ The images and breeds were kindly provided by:
 
 ## The app features
 
-Customized views
+Customized views / animations
+
 UI from code
+
 MVP / MVVM kinda architecture
+
 Working with API
+
 UserDefaults 
+
 Localization
+
 Dark mode and many more!
 
 
