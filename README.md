@@ -16,7 +16,7 @@ You can adjust your search by adding filters (such as "dog-friendly", "child-fri
 <p align="center">
   <img src="1.png" width="203">
   <img src="2.png" width="200">
-  <img src="3.png" width="203">
+  <img src="3.png" width="204">
   <img src="4.png" width="203">
 </p>
 
