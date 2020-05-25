@@ -19,7 +19,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
     
     var allCats: [Cat] = [] // Все коты с сервера
     var preparedCats: [Cat] = [] // Готовые к употреблению ( с прогруженной картинкой )
-    var showenCats: [Cat] = []
+    var shown: [Cat] = []
     
     required init(vc: HomeViewControllerProtocol, filterManager: FilterManagerProtocol = FilterManager.shared, apiClient: APIClientProtocol = APIClient.shared, favoriteManager: FavoriteManagerProtocol = FavoriteManager.shared) {
         self.vc = vc
@@ -31,7 +31,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
     func reload() {
         self.allCats = []
         self.preparedCats = []
-        self.showenCats = []
+        self.shown = []
         
         DispatchQueue.main.async {
             self.vc.removeAllCards()
@@ -65,22 +65,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
                     self.allCats = breeds.filter { self.filterManager.selected.match($0) }.map { Cat($0) }
                     self.allCats.shuffle()
                     
-                    self.preloadCats {
-                        
-                        DispatchQueue.main.async {
-                            self.vc.hideLoading()
-                            self.vc.enableRefreshButton()
-                            self.vc.enableFiltersButton()
-                            
-                            if self.preparedCats.isEmpty {
-                                self.vc.showEmptyMessage()
-                                self.vc.enableRefreshButton()
-                                self.vc.enableFiltersButton()
-                            } else {
-                                self.showAllPrepared()
-                            }
-                        }
-                    }
+                    self.preloadCats()
                 }
             }
         }
@@ -91,27 +76,41 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
         
         for _ in 0..<count {
             if let cat = preparedCats.popLast() {
-                self.showenCats.append(cat)
-                self.showNextCard()
+                self.shown.append(cat)
+                DispatchQueue.main.async {
+                    self.vc.showCard(for: cat)
+                    self.vc.enableBottomButtons()
+                }
             }
         }
     }
     
-    func preloadCats(completion: @escaping () -> ()) {
+    func preloadCats() {
         DispatchQueue.global(qos: .userInitiated).async {
-            let count = 5 < self.allCats.count ? 5 : self.allCats.count
-            let sema = DispatchSemaphore(value: 0)
+            let count =  5 < self.allCats.count ? 5 : self.allCats.count
+             
+            let dispatchGroup = DispatchGroup()
             
-            for _ in 0..<count {
-                
+            for i in 0..<count {
+                dispatchGroup.enter()
                 self.loadNextCat { (cat, error) in
-                    sema.signal()
+                    dispatchGroup.leave()
                 }
-                
-                sema.wait()
+                dispatchGroup.wait()
+
             }
-            
-            completion()
+            dispatchGroup.notify(queue: .main) {
+                self.vc.hideLoading()
+                self.vc.enableRefreshButton()
+                self.vc.enableFiltersButton()
+                if self.preparedCats.isEmpty {
+                    self.vc.showEmptyMessage()
+                    self.vc.enableRefreshButton()
+                    self.vc.enableFiltersButton()
+                } else {
+                    self.showAllPrepared()
+                }
+            }
         }
     }
     
@@ -149,27 +148,6 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
         reload()
     }
     
-    func showNextCard() {
-        guard let cat = self.preparedCats.first else {
-            return
-        }
-        
-        self.showenCats.append(cat)
-        self.preparedCats.removeFirst()
-        
-        DispatchQueue.main.async {
-            self.vc.enableBottomButtons()
-            self.vc.showCard(for: cat)
-        }
-    }
-    
-    func showNextCard( _ cat: Cat) {
-        DispatchQueue.main.async {
-            self.vc.enableBottomButtons()
-            self.vc.showCard(for: cat)
-        }
-    }
-    
     func tapOnFilterButton() {
         vc.openFiltersScreen()
     }
@@ -177,7 +155,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
     
     func tapOnLikeButton() {
         self.vc.removeTopCard()
-        if let cat = self.showenCats.first {
+        if let cat = self.shown.first {
             self.cardRemoved(cat)
             self.swipeOnLike(for: cat)
         }
@@ -186,7 +164,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
     
     func tapOnDislikeButton() {
         self.vc.removeTopCard()
-        if let cat = self.showenCats.first {
+        if let cat = self.shown.first {
             self.cardRemoved(cat)
             self.swipeOnDislike(for: cat)
         }
@@ -207,7 +185,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
         
         DispatchQueue.global(qos: .userInitiated).async {
                         
-            let disableButtons = self.showenCats.isEmpty
+            let disableButtons = self.shown.isEmpty
             
             if disableButtons {
                 DispatchQueue.main.async {
@@ -234,7 +212,7 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
                 if let cat = cat {
                     DispatchQueue.main.async {
                         
-                        self.showenCats.append(cat)
+                        self.shown.append(cat)
                         if self.preparedCats.isEmpty {
                             self.preparedCats.removeFirst()
                         }
@@ -244,7 +222,6 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
                             self.vc.showCard(for: cat)
                         }
                         
-                        self.showNextCard()
                         completion(true)
                     }
                 } else {
@@ -283,22 +260,22 @@ class HomeViewPresenter: HomeViewPresenterProtocol {
     }
     
     func cardRemoved( _ cat: Cat) {
-        if !self.showenCats.isEmpty {
-            self.showenCats.removeFirst()
-        } else {
+        if !self.shown.isEmpty {
+            self.shown.removeFirst()
+        }
+
+        if self.shown.isEmpty {
             self.vc.disableBottomButtons()
         }
         
         self.showAndLoadNextCard { success in
-//            print(self.preparedCats.count, self.allCats.count, self.showenCats.count)
-            if self.preparedCats.isEmpty && self.allCats.isEmpty && self.showenCats.isEmpty {
+            if self.preparedCats.isEmpty && self.allCats.isEmpty && self.shown.isEmpty {
                 DispatchQueue.main.async {
                     self.vc.showEmptyMessage()
                 }
             }
             
-            
-            if !success && self.showenCats.isEmpty {
+            if !success && self.shown.isEmpty {
                 DispatchQueue.main.async {                    
                     self.vc.enableFiltersButton()
                     self.vc.enableRefreshButton()

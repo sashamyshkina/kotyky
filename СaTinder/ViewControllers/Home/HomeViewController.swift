@@ -58,7 +58,7 @@ class HomeViewController: UIViewController, WithLoadingIndicator, WithShowError 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.presenter = HomeViewPresenter(vc: self, filterManager: FilterManager.shared)
+        self.presenter = HomeViewPresenter(vc: self)
 
         self.view.backgroundColor = .systemBackground
         overallStackview.backgroundColor = .clear
@@ -148,17 +148,11 @@ extension HomeViewController: HomeViewControllerProtocol {
     }
     
     func disableBottomButtons() {
-        buttonStackView.reloadButton.isEnabled = false
-        buttonStackView.dislikeButton.isEnabled = false
-        buttonStackView.likeButton.isEnabled = false
-        buttonStackView.filtersButton.isEnabled = false
+        buttonStackView.buttons.forEach { $0.isEnabled = false }
     }
     
     func enableBottomButtons() {
-        buttonStackView.reloadButton.isEnabled = true
-        buttonStackView.dislikeButton.isEnabled = true
-        buttonStackView.likeButton.isEnabled = true
-        buttonStackView.filtersButton.isEnabled = true
+        buttonStackView.buttons.forEach { $0.isEnabled = true }
     }
 
     func openDetailedScreen(for cat: Cat) {

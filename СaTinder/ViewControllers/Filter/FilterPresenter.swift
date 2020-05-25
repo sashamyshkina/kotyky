@@ -38,6 +38,7 @@ class FilterPresenter: FilterPresenterProtocol {
     }
     
     func tapOn(filter: Filter) {
+        
         if filterManager.isSelected(filter) {
             filterManager.setDeselected(filter)
         } else {

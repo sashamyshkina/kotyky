@@ -19,11 +19,12 @@ extension Array where Element == Filter {
             return !result ? result : filter.match(breed)
         }
     }
+    
 }
 
 class IntellegentFilter: Filter {
     var name: String = Const.intellegent
-    
+
     func match(_ breed: Breed) -> Bool {
         return breed.intelligence >= 3
     }
